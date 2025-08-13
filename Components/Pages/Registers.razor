@@ -1,0 +1,100 @@
+@page "/registers"
+@inject ProgressTrackerService Progress
+@rendermode InteractiveServer
+<h1>Registers</h1>
+<p><NavLink href="/" class="btn btn-primary">Go to Home Page</NavLink></p>
+@if (Progress.RegisterStatus.Values.All(v => v))
+{
+    <p>
+        <button class="btn btn-accept" @onclick="MarkAndRedirect">Mark Registers as Counted</button>
+    </p>
+}
+
+<h2>Register Status</h2>
+<ul>
+    @foreach (var register in Progress.RegisterStatus)
+    {
+        <li>
+            <p>@register.Key: @register.Value
+            @if (!register.Value)
+            {
+                <p><button class="btn btn-success btn-sm" @onclick="() => MarkAsCounted(register.Key)">Mark as Counted</button></p>
+            }
+            </p>
+        </li>
+    }
+</ul>
+
+@if (Progress.RegisterStatus.Values.All(v => v))
+{
+    <p>
+        <button class="btn btn-accept" @onclick="MarkAndRedirect">Mark Registers as Counted</button>
+    </p>
+}
+
+<h2>Register Counting</h2>
+<p>A tool that I've found works really well for me is building the till while you're counting it.</p>
+<p>With the exception of the lottery till, each till gets built like this:</p>
+<table>
+    <thead>
+        <tr>
+            <th style="padding-right: 2em;"><strong>Currency Type</strong></th>
+            <th><strong>Amount</strong></th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr><td style="padding-right: 2em;">20s</td><td>$200 / 10</td></tr>
+        <tr><td style="padding-right: 2em;">10s</td><td>$100 / 10</td></tr>
+        <tr><td style="padding-right: 2em;">5s</td><td>$100 / 20</td></tr>
+        <tr><td style="padding-right: 2em;">1s</td><td>$50 / 50</td></tr>
+        <tr><td style="padding-right: 2em;">Coin rolls</td><td>1 quarter, 1 dime, 1 penny</td></tr>
+        <tr><td style="padding-right: 2em;">Quarters</td><td>$10 / 40</td></tr>
+        <tr><td style="padding-right: 2em;">Dimes</td><td>$5 / 50</td></tr>
+        <tr><td style="padding-right: 2em;">Nickels</td><td>$2 / 40</td></tr>
+        <tr><td style="padding-right: 2em;">Pennies</td><td>¢.50 / 50</td></tr>
+    </tbody>
+</table>
+<p></p>
+<p>The lottery till gets built like this:</p>
+<table>
+    <thead>
+        <tr>
+            <th style="padding-right: 2em;"><strong>Currency Type</strong></th>
+            <th><strong>Amount</strong></th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr><td style="padding-right: 2em;">20s</td><td>$500 / 25</td></tr>
+        <tr><td style="padding-right: 2em;">10s</td><td>$150 / 15</td></tr>
+        <tr><td style="padding-right: 2em;">5s</td><td>$100 / 20</td></tr>
+        <tr><td style="padding-right: 2em;">1s</td><td>$50 / 50</td></tr>
+    </tbody>
+</table>
+
+@if (Progress.RegisterStatus.Values.All(v => v))
+{
+    <p>
+        <button class="btn btn-accept" @onclick="MarkAndRedirect">Mark Registers as Counted</button>
+    </p>
+}
+
+
+@code {
+    [Inject] private NavigationManager? Navigation { get; set; }
+
+    private void MarkAndRedirect()
+    {
+        FinalizeRegisters();
+        Navigation?.NavigateTo("/");
+    }
+    private void MarkAsCounted(string registerKey)
+    {
+        Progress.RegisterStatus[registerKey] = true;
+        StateHasChanged();
+    }
+    private void FinalizeRegisters()
+    {
+        Progress.RegistersCounted = true;
+        Console.WriteLine("All registers have been marked as counted.");
+    }
+}

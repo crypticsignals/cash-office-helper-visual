@@ -1,0 +1,87 @@
+@page "/deposits"
+@inject ProgressTrackerService Progress
+@rendermode InteractiveServer
+
+<PageTitle>Deposits</PageTitle>
+<h1>Deposits</h1>
+
+<p><NavLink href="/" class="btn btn-primary">Go to Home Page</NavLink></p>
+
+@if (!(Progress.CashDepositsDone && Progress.CheckDepositsDone))
+{
+    @if (!Progress.CashDepositsDone)
+    {
+        <div>
+        <h2>Cash Deposits</h2>
+        <p>$100 bills, $50 bills, and $20 bills can be deposited. For 20s, please make sure the safe drawer has enough before doing so.</p>
+        <p class="warn">When filling cash bags, it is important to remember that you cannot go over $4000 per bag normally, unless your extra cash in the green envelope puts you slightly over or you run in to a lot of money at the very end.</p>
+        <p>To complete cash deposits:</p>
+        <ol>
+            <li>Get a cash bag from the top shelf and a deposit slip from the top right drawer next to the safe</li>
+            <li><strong>On the deposit slip</strong>, fill in: currency details, date, total, total items, and the bag number. Sign on the bottom of the slip after this.</li>
+            <li>If you used a green envelope for leftover cash that would not fit a strap, write the total amount of money in that envelope under "MISC"</li>
+            <li><strong>On the cash bag</strong>, fill in everthing on the main part of the bag as well as the removable top part too.</li>
+            <li>Drop your cash in, then tear off the removable top strip from the top and staple it to the carbon copy of the deposit slip.</li>
+            <li>Place the white copy of the deposit slip in the pocket on the bag itself, then leave that on the counter along side the carbon copy.</li>
+        </ol>
+        <p><button class="btn btn-accept" @onclick="MarkCashDepositsDone">Mark Cash Deposits Done</button></p>
+        <!--MAYBE: Have buttons that have "show strap maker" "show strap calculator" etc-->
+        </div>
+    }
+    else
+    {
+        <p>✅Cash Deposits have been marked as done.</p>
+    }
+
+    @if (!Progress.CheckDepositsDone)
+    {
+        <div>
+        <h2>Check Deposits</h2>
+        <p>To complete check deposits:</p>
+        <ol>
+            <li>Take all the checks that have been collected today and run a calculator total on them, then tear it from the calculator once it's all added.</li>
+            <li>Also grab a check deposit bag and another deposit slip.</li>
+            <li>Ensure checks are stamped with the RETURN TO: stamp (has all the arrows on the side)</li>
+            <li><strong>On the deposit slip</strong>, fill in: The total on the check section, date, total items, and the bag number. Sign on the bottom as well.</li>
+            <li>Fill in the details on the check deposit bag like you did with the cash bag, then process the deposit slip the same way, placing the white copy of the deposit slip in the pocket on the bag and removing the strip from the top and stapling it to the carbon copy of it.</li>
+        </ol>
+        <p><button class="btn btn-accept" @onclick="MarkCheckDepositsDone">Mark Check Deposits Done</button></p>
+        </div>
+    }
+    else
+    {
+        <p>✅Check Deposits have been marked as done.</p>
+    }
+}
+else
+{
+    <p><strong>Now that both deposit bags are gathered, you must also enter these in In-store Accounting.</strong></p>
+    <p>Go to ISA > Safe Activities > Deposits.</p>
+    <p>Fill in the bills side first, then do the checks section after you submitted the cash deposit. The Cash Reference Number will be the last 5 numbers on the first set of numbers on the MICR number on the deposit slips.</p>
+    <p>After this, put the yellow slips with the bag tops in the rightmost drawer. There are two envelopes there for each.</p>
+    <p>Next, put the yellow slips with the bag tops in the rightmost drawer, there are two envelopes for cash and check deposit slips.</p>
+    <p>Finally, fill in the consignment log for these.</p>
+    <p class="warn"><strong>Click below only when you have followed this completely:</strong></p>
+    <p><button class="btn btn-accept" @onclick="MarkDepositsDone">Mark Deposits Done</button></p>
+}
+
+@code {
+    [Inject] private NavigationManager? Navigation { get; set; }
+
+    void MarkDepositsDone()
+    {
+        Progress.DepositsDone = true;
+        Console.WriteLine("Button clicked, DepositsDone set to true");
+        Navigation?.NavigateTo("/");
+    }
+    void MarkCashDepositsDone()
+    {
+        Progress.CashDepositsDone = true;
+        Console.WriteLine("Button clicked, CashDepositsDone set to true");
+    }
+    void MarkCheckDepositsDone()
+    {
+        Progress.CheckDepositsDone = true;
+        Console.WriteLine("Button clicked, CheckDepositsDone set to true");
+    }
+}

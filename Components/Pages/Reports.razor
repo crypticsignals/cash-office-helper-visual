@@ -1,0 +1,243 @@
+@page "/Reports"
+@inject ProgressTrackerService Progress
+@rendermode InteractiveServer
+
+<PageTitle>Reports</PageTitle>
+<h1>Reports</h1>
+<p><NavLink href="/" class="btn btn-primary">Go to Home Page</NavLink></p>
+@if (!(Progress.Post9PMReportsDone && Progress.Post10PMReportsDone))
+{ <p class="sidenote">If you time it right, you can print all of these reports in one go, saving you some extra time.</p> }
+
+@if (!Progress.Post9PMReportsDone)
+{
+    <h2>Post-9PM Tasks/Reports</h2>
+    <br />
+    <p class="warn">I'd recommend getting your Daily Check Cashing Log (DCCL) while you're getting these reports.</p>
+    @if (!Progress.WesternUnionReportsDone)
+    {
+        <h3>Western Union Reports</h3>
+        <p>To get Western Union reports ready:</p>
+        <ol>
+            <li>On one of the front desk computers, log in to WUPOS.</li>
+            <li>Print a transaction log, then bring it to the cash office.</li>
+            <li>Go to the daily sales report in the cash office computer. There are totals for the sends and receives on the last page, you will need to make sure the amounts for each match, as well as the number of receipts you have matches.</li>
+            <li>If everything matches, you are good to go. On the back of the cash office envelope, fill in the totals for today and initial it on the back.</li>
+            @if (Progress.IsSaturday)
+            { <li>Lastly, finalize everything on the envelope and put it in the WARE.</li> }
+        </ol>
+        <p><button class="btn btn-accept" @onclick="MarkWUReportDone" disabled="@Progress.WesternUnionReportsDone">Mark Western Union Reports Done</button></p>
+    }
+    else
+    {
+        <p>✅ Western Union Reports have been marked as done.</p>
+    }
+
+    @if (!Progress.SSCCReportsDone)
+    {
+        <h3>SSCC Reports</h3>
+        <p>To get SSCC reports ready:</p>
+        <ol>
+            <li>Log in to the SSCC machine, then print:<ul>
+                <li>Reports > Bag Report</li>
+                <li>Reports > Calendar Day Report</li>
+                @if (Progress.IsSaturday) { <li>Reports > Calendar Week Report</li> }
+            </ul></li>
+            <li>After this, find the fee on the reports, then ring it out at one of the front desk registers using the 'SSCC fee' item and tender.</li>
+            <li>In the back office, make sure the SSCC totals match the daily sales report. If they do, write the totals on the envelope and put the stapled reports inside.</li>
+            @if (Progress.IsSaturday)
+            { <li>Lastly, finalize everything on the envelope and put it in the WARE.</li> }
+        </ol>
+        <p><button class="btn btn-accept" @onclick="MarkSSCCReportDone">Mark SSCC Reports Done</button></p>
+    }
+    else
+    {
+        <p>✅ SSCC Reports have been marked as done.</p>
+    }
+
+    @if (Progress.IsSaturday && !Progress.TaxExemptReportsDone)
+    {
+        <h3>Tax Exempt/Shipt Reports</h3>
+        <p>To get Tax Exempt/Shipt reports ready:</p>
+        <ol>
+            <li>Get the Tax Exempt/Shipt papers from the front desk. <strong>If both for this week are blank, congratulations! You got lucky and don't have to worry about doing anything else for these reports.</strong> You can leave the unused papers in the binder and press the button to mark this step as completed.</li>
+            <li>If you didn't get lucky, bring the used papers to the cash office and run a calculator tape for the totals for each, and write that total on each corresponding paper. Staple the calculator tapes to each paper.</li>
+            <li>Make copies of these papers, they go to the WARE.</li>
+            <li>In the cash office program:<ol>
+                <li>go to Electronic Journal and select the list item for today and the previous six days.</li>
+                <li>Click "select" on the top bar.</li>
+                <li>Go to option 15 in the menu that pops up and click it.</li>
+                <li>Another popup menu will appear, click option 15 on this one as well.</li>
+                <li>Click OK, then print list > printer</li>
+                <li>Reports will print out here. Paperclip these to your original tax exempt and shipt papers.</li>
+            </ol></li>
+            <li>Put the paperclipped papers in the purple bag.</li>
+        </ol>
+        <p><button class="btn btn-accept" @onclick="MarkTEShiptReportDone">Mark Tax Exempt/Shipt Reports Done</button></p>
+    }
+    else if (Progress.IsSaturday && Progress.TaxExemptReportsDone)
+    {
+        <p>✅ Tax Exempt/Shipt Reports have been marked as done.</p>
+    }
+
+    @if (Progress.IsSaturday && !Progress.SubdepartmentVouchersDone)
+    {
+        <h3>Subdepartment Voucher Reports</h3>
+        <p>To get Subdepartment Voucher reports ready:</p>
+        <ol>
+            <li>Get this week's subdepartment voucher folder ready.</li>
+            <li>Go to the main publix office screen, find and click "subdepartment vouchers", then click 'week', then preview it.</li>
+            <li>If all departments on this are the same, paperclip all of the vouchers inside the envelope together. If not, you'll need to group them together by department with paperclips.</li>
+            <li>Check the amounts to make sure they match.</li>
+            <li>Print 2 reports, one for the manila envelope and one for the WARE.</li>
+            <li>Place one report folded sideways in the manila envelope, fill out the front of it, then put it in the purple bag.</li>
+            <li>Place the other printed report into the WARE.</li>
+        </ol>
+        <p><button class="btn btn-accept" @onclick="MarkSDVReportDone">Mark Subdepartment Voucher Reports Done</button></p>
+    }
+    else if (Progress.IsSaturday && Progress.SubdepartmentVouchersDone)
+    {
+        <p>✅ Subdepartment Voucher Reports have been marked as done.</p>
+    }
+
+    <!-- I hope I may be forgiven for this abominable cluster of if statements -->
+    @if (!Progress.IsSaturday && !Progress.Post9PMReportsDone && Progress.WesternUnionReportsDone && Progress.SSCCReportsDone)
+    {
+        <button class="btn btn-accept" @onclick="MarkPost9PMReportsDone">Mark Post-9PM Reports Done</button>
+    }
+    else if (Progress.IsSaturday && !Progress.Post9PMReportsDone && Progress.WesternUnionReportsDone && Progress.SSCCReportsDone && Progress.TaxExemptReportsDone && Progress.SubdepartmentVouchersDone)
+    {
+        <button class="btn btn-accept" @onclick="MarkPost9PMReportsDone">Mark Post-9PM Reports Done</button>
+    }
+    <hr />
+}
+else
+{
+    <p>✅ Post-9PM Reports have been marked as done.</p>
+}
+
+@if (!Progress.Post10PMReportsDone)
+{
+    <h2>Post-10PM Tasks/Reports</h2>
+    @if (!Progress.MoneyOrderReportsDone)
+    {
+        <h3>Money Order Reports</h3>
+        <p>To get Money Order reports ready:</p>
+        <ol>
+            <li>Log in to the money order machine, then print out the closing reports for today from each machine. (Using Reports>1>3)</li>
+            <li>    To do this, take a fourth of a piece of printer paper and stick it in the top of the machine. Keep close note of where the text gets printed, and be sure to flip it to the other side for the other machine to print on it.</li>
+            <li>In the back office, make sure the money order totals match the daily sales report.</li>
+            <li>If they do, write the totals on the envelope and put the reports inside. Initial the day's section on the back of the envelope.</li>
+            @if (Progress.IsSaturday)
+            { <li>Lastly, finalize everything on the envelope (including the totals) and put it in the WARE.</li> }
+        </ol>
+        <p><button class="btn btn-accept" @onclick="MarkMoneyOrderReportDone">Mark Money Order Reports Done</button></p>
+    }
+    else
+    {
+        <p>✅ Money Order Reports have been marked as done.</p>
+    }
+
+    @if (!Progress.ITVMReportsDone)
+    {
+        <h3>ITVM Reports</h3>
+        <p>To get ITVM reports ready:</p>
+        <ol>
+            <li>Log in to the ITVM machine. Grab any remaining cash out of the machine, you'll run this as a pickup when you get back to the cash office.</li>
+            <li>For the reports, print an inventory report and a daily report (reports > online reports > sales report > today).</li>
+            <li>In the cash office, you'll put the inventory report inside the safe door. The daily report is used for counting 138, and is left with your usual papers.</li>
+            <li>Pick up the remaining cash from 138.</li>
+        </ol>
+        <p><button class="btn btn-accept" @onclick="MarkITVMReportDone">Mark ITVM Reports Done</button></p>
+    }
+    else
+    {
+        <p>✅ ITVM Reports have been marked as done.</p>
+    }
+
+    @if (Progress.MoneyOrderReportsDone && Progress.ITVMReportsDone)
+    {
+        <button class="btn btn-accept" @onclick="MarkPost10PMReportsDone">Mark Post-10PM Reports Done</button>
+    }
+}
+else
+{
+    <p>✅ Post-10PM Reports have been marked as done.</p>
+}
+
+@if (Progress.Post9PMReportsDone && Progress.Post10PMReportsDone && !Progress.ReportsDone)
+{
+    <h2>End of Night Reports</h2>
+    @if (!Progress.EndOfNightTasksDone)
+    {
+        <p class="warn"><strong>These reports can only be done after the end of night workflow/tasks are completed.</strong> Please do this first.</p>
+        <p><NavLink href="/EndOfNight" class="btn btn-warn">End of Night Tasks</NavLink></p>
+    }
+    else if (Progress.EndOfNightTasksDone)
+    {
+        <p>You will need to print out several reports:</p>
+        <ul>
+            <li>2 safe balancing reports (from In-Store Accounting)</li>
+            <li>1 AAS (from In-Store Accounting)</li>
+            <li>2 TFCAs</li>
+            <li>1 Register Over/Short Report</li>
+            <li>1 Department Analysis Report</li>
+        </ul>
+        <p class="sidenote">To print the AAS, go to In-Store Accounting > Accounting Activity Summary > Click the filter button on the "type" column, click "Deposit", then click Print.</p>
+        <p>When all your reports are printed, hole punch them. After doing so, file them away:</p>
+        <ul>
+            <li>GCCA Binder gets DCCL, TFCA, AAS in that order.</li>
+            <li>Safe Reports binder gets Register Over/Short report and the Safe Balancing report.</li>
+            <li>Cash Office binder gets the other Safe Balancing report under the "PM Safe Balancing" tab.</li>
+        </ul>
+        <p>The remaining two reports go to the manager's office.</p>
+        <p><button class="btn btn-accept" @onclick="MarkReportsDone">Mark End of Night Reports Done</button></p>
+    }
+}
+
+@code {
+    [Inject] private NavigationManager? Navigation { get; set; }
+    void MarkPost9PMReportsDone()
+    {
+        Progress.Post9PMReportsDone = true;
+        Console.WriteLine("Button clicked, Post9PMReportsDone set to true");
+    }
+    void MarkPost10PMReportsDone()
+    {
+        Progress.Post10PMReportsDone = true;
+        Console.WriteLine("Button clicked, Post10PMReportsDone set to true");
+    }
+    void MarkReportsDone()
+    {
+        Progress.ReportsDone = true;
+        Console.WriteLine("Button clicked, ReportsDone set to true");
+        Navigation?.NavigateTo("/");
+    }
+
+    void MarkWUReportDone()
+    {
+        Progress.WesternUnionReportsDone = true;
+    }
+
+    void MarkSSCCReportDone()
+    {
+        Progress.SSCCReportsDone = true;
+    }
+
+    void MarkTEShiptReportDone()
+    {
+        Progress.TaxExemptReportsDone = true;
+    }
+    void MarkSDVReportDone()
+    {
+        Progress.SubdepartmentVouchersDone = true;
+    }
+    void MarkMoneyOrderReportDone()
+    {
+        Progress.MoneyOrderReportsDone = true;
+    }
+    void MarkITVMReportDone()
+    {
+        Progress.ITVMReportsDone = true;
+    }
+
+}

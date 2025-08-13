@@ -1,0 +1,213 @@
+@page "/SaturdayNight/InitialChecklist"
+@inject ProgressTrackerService Progress
+@rendermode InteractiveServer
+
+<PageTitle>Initial Checklist</PageTitle>
+<h1>Initial Checklist</h1>
+<p><NavLink href="/" class="btn btn-primary">Go to Home Page</NavLink></p>
+
+@if (Progress.NewEvelopesGathered && Progress.OldEnvelopesReplaced && Progress.WarePrepared && Progress. WsmcPrepared && Progress.WeeklyFoldersEmptied && Progress.InitialMtmossccTotalsVerified && Progress.InitialMailBagsPlaced && Progress.PreviousWareShredded)
+{
+    <p><button class="btn btn-accept" @onclick="MarkInitialChecklistDone">Mark Initial Checklist Done</button></p>
+}
+else 
+{
+    <p class="warn">This looks like a lot, but just take it one step at a time. <strong>Aside from shredding the WARE, everything here needs to be done before continuing.</strong></p>
+}
+
+@if (!Progress.NewEvelopesGathered)
+{
+    <div>
+        <h2>Step 1: Gather New Envelopes</h2>
+        <p>New envelopes can be found in the top right drawer next to the safe.</p>
+        <p>You will need:</p>
+        <ul>
+            <li>Weekly Store Mail Checklist (WSMC)</li>
+            <li>Weekly Money Order Activity Summary Envelope</li>
+            <li>Weekly Money Transfer Activity Summary Envelope</li>
+            <li>SSCC Weekly Activity Summary Envelope</li>
+            <li>Weekly Accounting Renention Envelope</li>
+            <li>Subdepartment Voucher Envelope</li>
+        </ul>
+        <p><button class="btn btn-accept" @onclick="MarkNewEnvelopesGathered">Mark New Envelopes Gathered</button></p>
+    </div>
+}
+else
+{
+    <p>✅ New Envelopes have been gathered.</p>
+}
+
+@if(!Progress.OldEnvelopesReplaced)
+{
+    <div>
+        <h2>Step 2: Replace Old Envelopes</h2>
+        <p>You will need to replace the old envelopes in the cash office binder with the new ones you gathered.</p>
+        <p>You will also need to hole punch the new envelopes and leave them in the binder.</p>
+        <p class="warn">You'll need to keep this past week's envelopes around to put things in.</p>
+        <p><button class="btn btn-accept" @onclick="MarkOldEnvelopesReplaced">Mark Old Envelopes Replaced</button></p>
+    </div>
+}
+else
+{
+    <p>✅ Old Envelopes have been replaced.</p>
+}
+
+@if (!Progress.WarePrepared)
+{
+    <div>
+        <h2>Step 3: Prepare WARE</h2>
+        <p>On the front, add the week ending date (just tonight's date) and the week number, which can be found on the calendar on the wall by the safe.</p>
+        <p>Cross out the lines starting with:</p>
+        <ul>
+            <li>Self checkout</li>
+            <li>Yellow copy</li>
+            <li>Scratch Pads</li>
+            <li>Customer Service Register</li>
+            <li>Tidel Safe</li>
+        </ul>
+        <p>On the right side, write "SSCC Folder"; this will be placed in the WARE later.</p>
+        <p>And finally, for ease of use, prop it up behind the pencil holder, you'll need this ready to go for later.</p>
+        <p><button class="btn btn-accept" @onclick="MarkWarePrepared">Mark WARE Prepared</button></p>
+    </div>
+}
+else
+{
+    <p>✅ WARE has been prepared.</p>
+}
+
+@if (!Progress.WsmcPrepared)
+{
+    <div>
+        <h2>Step 4: Prepare WSMC</h2>
+        <p>To prepare this one:</p>
+        <ul>
+            <li>Write store number and week ending date</li>
+            <li>Check "Yes" next to vendor coupons and all six boxes under the "Corporate Mailbag" section unless you are told otherwise.</li>
+            <li>Print and sign your name at the bottom and add the date.</li>
+        </ul>
+        <p><button class="btn btn-accept" @onclick="MarkWsmcPrepared">Mark WSMC Prepared</button></p>
+    </div>
+}
+else
+{
+    <p>✅ WSMC has been prepared.</p>
+}
+
+@if (!Progress.WeeklyFoldersEmptied)
+{
+    <div>
+        <h2>Step 5: Empty This Week's Folders</h2>
+        <p>Empty the contents of the weekly folders into the WARE.</p> 
+        <p>Additionally, add in the change order form here.</p>
+        <p>At this point they <i>should</i> be in the cash office, but all the lottery balancing sheets from this week go in here too.</p>
+        <p>This includes:</p>
+        <ul>
+            <li>Money Orders</li>
+            <li>Money Transfers</li>
+            <li>SSCCs</li>
+            <li>Accounting Retention</li>
+        </ul>
+        <p class="warn">Make sure to double check that everything is in the right place!</p>
+        <p><button class="btn btn-accept" @onclick="MarkWeeklyFoldersEmptied">Mark Weekly Folders Emptied</button></p>
+    </div>
+}
+else
+{
+    <p>✅ Weekly Folders have been emptied.</p>
+}
+
+@if (!Progress.InitialMtmossccTotalsVerified)
+{
+    <div>
+        <h2>Step 6: Verify Initial MT/MO/SSCC Totals</h2>
+        <p>Verify the totals for Money Transfers, Money Orders, and SSCCs on the respective envelopes.</p>
+        <p>This should match what is on the back of each respective envelope.</p>
+        <p><button class="btn btn-accept" @onclick="MarkInitialMtmossccTotalsVerified">Mark Initial MT/MO/SSCC Totals Verified</button></p>
+    </div>
+}
+else
+{
+    <p>✅ Initial MT/MO/SSCC Totals have been verified.</p>
+}
+
+@if (!Progress.InitialMailBagsPlaced)
+{
+    <div>
+        <h2>Step 7: Place Initial Mail Bags</h2>
+        <p>Place the pink and salmon bags in the big green bag. Also have the purple bag ready to go, but don't worry about it right now.</p>
+        <p class="sidenote"><i>Later, it will have Money Order & Transfer Envelopes, Tax Exempt & Shipt Logs, Donation Forms, Sub-department vouchers, electronic transfers envelope if it has anything (if it does, tear the top strip off and put it into WARE), and the yellow bag if we have it which has the I-9s in it.</i></p>
+        <p>If there's any I-9s ready to send, they are in the bag on the bottom mail shelf. They go into the yellow bag and that is in the green bag. If there is not a folder on the shelf, grab the Corporate Personnel Records Folder, drop the I-9s in it, seal it, and write I-9 real big on top.</p>
+        <p>The gray bag has the store mail in it. Anything in the middle two sections in the mail hanger go here.</p>
+        <p><button class="btn btn-accept" @onclick="MarkInitialMailBagsPlaced">Mark Initial Mail Bags Placed</button></p>
+    </div>
+}
+else
+{
+    <p>✅ Initial Mail Bags have been placed.</p>
+}
+
+@if (!Progress.PreviousWareShredded)
+{
+    <div>
+        <h2>Step 8: Shred Previous WARE</h2>
+        <p>This can be done whenever, but it is important to do it before you finish with your WARE and put it in the spot for this week.</p>
+        <p>The previous WARE can be found in the bottom left drawer on the safe side. Find the ware from the previous week. Folders are labelled 1-27/28-52, so find the one that matches the week number of the current week.</p>
+        <p>Open the drawer, take out the previous WARE, then shred it and everything inside. This will be time consuming but it must be done.</p>
+        <p><button class="btn btn-accept" @onclick="MarkPreviousWareShredded">Mark Previous WARE Shredded</button></p>
+    </div>
+}
+else
+{
+    <p>✅ Previous WARE has been shredded.</p>
+}
+
+@code {
+    [Inject] private NavigationManager? Navigation { get; set; }
+    void MarkInitialChecklistDone()
+    {
+        Progress.InitialChecklistDone = true;
+        Console.WriteLine("Button clicked, InitialChecklistDone set to true");
+        Navigation?.NavigateTo("/");
+    }
+    void MarkNewEnvelopesGathered()
+    {
+        Progress.NewEvelopesGathered = true;
+        Console.WriteLine("Button clicked, NewEnvelopesGathered set to true");
+    }
+    void MarkOldEnvelopesReplaced()
+    {
+        Progress.OldEnvelopesReplaced = true;
+        Console.WriteLine("Button clicked, OldEnvelopesReplaced set to true");
+    }
+    void MarkWarePrepared()
+    {
+        Progress.WarePrepared = true;
+        Console.WriteLine("Button clicked, WarePrepared set to true");
+    }
+    void MarkWsmcPrepared()
+    {
+        Progress.WsmcPrepared = true;
+        Console.WriteLine("Button clicked, WsmcPrepared set to true");
+    }
+    void MarkWeeklyFoldersEmptied()
+    {
+        Progress.WeeklyFoldersEmptied = true;
+        Console.WriteLine("Button clicked, WeeklyFoldersEmptied set to true");
+    }
+    void MarkInitialMtmossccTotalsVerified()
+    {
+        Progress.InitialMtmossccTotalsVerified = true;
+        Console.WriteLine("Button clicked, InitialMtmossccTotalsVerified set to true");
+    }
+    void MarkInitialMailBagsPlaced()
+    {
+        Progress.InitialMailBagsPlaced = true;
+        Console.WriteLine("Button clicked, InitialMailBagsPlaced set to true");
+    }
+    void MarkPreviousWareShredded()
+    {
+        Progress.PreviousWareShredded = true;
+        Console.WriteLine("Button clicked, PreviousWareShredded set to true");
+    }
+
+}

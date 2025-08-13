@@ -1,0 +1,99 @@
+@page "/EndOfNight"
+@using System.Runtime.InteropServices
+@inject ProgressTrackerService Progress
+@rendermode InteractiveServer
+
+<PageTitle>End of Night</PageTitle>
+<h1>End of Night</h1>
+<p><NavLink href="/" class="btn btn-primary">Go to Home Page</NavLink></p>
+
+@if (Progress.IsSaturday && !Progress.SaturdayNightClosingTasksDone)
+{
+    <p class="warn">I'd recommend you complete the Saturday Night Closing Tasks before proceeding.</p>
+    <p><NavLink href="/SaturdayNight/ClosingTasks" class="btn btn-warn">Go to Saturday Night Closing Tasks</NavLink></p>
+}
+<p>For this part, follow this quick checklist:</p>
+
+@if (!Progress.DepositsDone)
+{
+    <p class="superwarn">⚠️ Deposits have not been marked as done. ⚠️</p>
+    <p class="superwarn">Please take care of this now.</p>
+    <NavLink href="/deposits" class="btn btn-superwarn">Go to Deposits</NavLink>
+}
+else
+{
+    @if (!Progress.OvernightTillPlaced)
+    {
+        <p><button class="btn btn-primary" @onclick="MarkOvernightTillPlaced">Place Overnight Till in 101</button></p>
+    }
+    else
+    {
+        <p>✅ Overnight Till placed in 101.</p>
+    }
+
+    @if (!Progress.BackOfficeTillCounted)
+    {
+        <p><button class="btn btn-primary" @onclick="MarkBackOfficeTillCounted">Count Back Office Till</button> before running end of night program</p>
+    }
+    else
+    {
+        <p>✅ Back Office Till has been counted.</p>
+    }
+
+    @if (!Progress.EndOfNightWorkflowDone)
+    {
+        <p><button class="btn btn-primary" @onclick="MarkEndOfNightWorkflowDone">Run End of Night Workflow Program</button> in In-Store Accounting</p>
+    }
+    else
+    {
+        <p>✅ End of Night Program has been run.</p>
+    }
+
+    @if (!Progress.DepositBagsDropped)
+    {
+        <p><button class="btn btn-primary" @onclick="MarkDepositBagsDropped">Drop Deposit Bags in drop safe</button></p>
+    }
+    else
+    {
+        <p>✅ Deposit Bags are in drop safe.</p>
+    }
+
+    @if (Progress.OvernightTillPlaced && Progress.BackOfficeTillCounted && Progress.EndOfNightWorkflowDone && Progress.DepositBagsDropped)
+    {
+        <p><button class="btn btn-accept" @onclick="MarkEONTasksDone">Mark End of Night Tasks Done</button></p>
+    }
+    else if (Progress.EndOfNightTasksDone)
+    {
+        <p>✅ End of Night Workflow has been marked as done.</p>
+    }
+}
+
+@code {
+    [Inject] private NavigationManager? Navigation { get; set; }
+    void MarkEONTasksDone()
+    {
+        Progress.EndOfNightTasksDone = true;
+        Console.WriteLine("Button clicked, EndOfNightTasksDone set to true");
+        Navigation?.NavigateTo("/");
+    }
+    void MarkOvernightTillPlaced()
+    {
+        Progress.OvernightTillPlaced = true;
+        Console.WriteLine("Button clicked, OvernightTillPlaced set to true");
+    }
+    void MarkBackOfficeTillCounted()
+    {
+        Progress.BackOfficeTillCounted = true;
+        Console.WriteLine("Button clicked, BackOfficeTillCounted set to true");
+    }
+    void MarkEndOfNightWorkflowDone()
+    {
+        Progress.EndOfNightWorkflowDone = true;
+        Console.WriteLine("Button clicked, EndOfNightWorkflowDone set to true");
+    }
+    void MarkDepositBagsDropped()
+    {
+        Progress.DepositBagsDropped = true;
+        Console.WriteLine("Button clicked, DepositBagsDropped set to true");
+    }
+}

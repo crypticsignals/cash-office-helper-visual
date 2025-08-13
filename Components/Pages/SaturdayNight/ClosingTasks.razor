@@ -1,0 +1,94 @@
+@page "/SaturdayNight/ClosingTasks"
+@inject ProgressTrackerService Progress
+@rendermode InteractiveServer
+
+<PageTitle>Saturday Night Closing Tasks</PageTitle>
+<h1>Saturday Night Closing Tasks</h1>
+<p><NavLink href="/" class="btn btn-primary">Go to Home Page</NavLink></p>
+
+@if (!Progress.CouponsCollected)
+{
+    <h2>Collecting Coupons</h2>
+    <ol>
+        <li>If you haven't already, place all the coupons from the registers in the coupon bag.</li>
+        <li>Go to daily sales report, and fine the expected total from the coupons on the right side, on the same line as "Vendor Coupons"</li>
+        <li>Fill in the blanks on the coupon bag including that total, plus the leftover vendor coupon amount blank on the mail checklist.</li>
+        <li>Seal the bag. Take the strip from the top of the coupon bag, then staple it to the carbon copy of the weekly store mail checklist.</li>
+        <li>Put the coupon bag in the gray bag.</li>
+        <li>Place the stapled bag strip and carbon copy in the WARE.</li>
+    </ol>
+    <p><button class="btn btn-primary" @onclick="MarkCouponsCollected">Mark Coupons Collected</button></p>
+}
+else
+{
+    <p>✅ Coupons have been collected.</p>
+}
+
+@if (Progress.CouponsCollected && !Progress.PurpleBagVerified)
+{
+    <h2>⚠️ Verify The Purple Bag</h2>
+    <p class="warn">Before going any further, please check to see if the purple bag has these six things in it: </p>
+    <ul>
+        <li>Money Order Activity Summary Envelope</li>
+        <li>Money Transfer Activity Summary Envelope</li>
+        <li>Tax Exempt & Shipt Logs</li>
+        <li>Donation Forms</li>
+        <li>Sub-Department Vouchers (in manila envelope)</li>
+        <li>Electronic Transfers Envelope (if it has anything)</li>
+    </ul>
+    <p>If it has all six items, place it in the green bag.</p>
+    <p><button class="btn btn-accept" @onclick="MarkPurpleBagVerified">Purple bag verified & placed</button> </p>
+}
+else if (Progress.PurpleBagVerified)
+{
+    <p>✅ Purple bag has been verified.</p>
+}
+
+@if (Progress.PurpleBagVerified && !Progress.GreenBagFinalized)
+{
+    <h2>Finalize the Green Bag</h2>
+    <p>All the colored bags go inside the green one. Refer to the colored sheet on the wall to see all of what goes in the green bag.</p>
+    <p>Take the regular copy of the mail checklist, fold it in half, and stick it on the rectangular window on the front of the bag.</p>
+    <p>In a bin on the floor below the desk, there is a box of blue seals. Take one out, zip up the green bag, put the zipper through the end part then put the seal over that zipper.</p>
+    <p>After this, put the filled WARE in the file drawer, where you previously took out the other one that you shredded earlier.</p>
+    <p><button class="btn btn-accept" @onclick="MarkGreenBagFinalized">Green bag finalized & placed</button></p>
+}
+else if (Progress.GreenBagFinalized)
+{
+    <p>✅ Green bag has been finalized.</p>
+}
+
+@if (!Progress.SaturdayNightClosingTasksDone && Progress.CouponsCollected && Progress.PurpleBagVerified && Progress.GreenBagFinalized)
+{
+    <p><button class="btn btn-accept" @onclick="MarkClosingTasksDone">Mark Closing Tasks Done</button></p>
+}
+else if (Progress.SaturdayNightClosingTasksDone)
+{
+    <p>✅ Saturday Night Closing Tasks have been completed.</p>
+}
+
+@code {
+    [Inject] private NavigationManager? Navigation { get; set; }
+    void MarkClosingTasksDone()
+    {
+        Progress.SaturdayNightClosingTasksDone = true;
+        Progress.SaturdayNightDone = true;
+        Console.WriteLine("Button clicked, SaturdayNightClosingTasksDone set to true");
+        Navigation?.NavigateTo("/");
+    }
+    void MarkCouponsCollected()
+    {
+        Progress.CouponsCollected = true;
+        Console.WriteLine("Button clicked, CouponsCollected set to true");
+    }
+    void MarkPurpleBagVerified()
+    {
+        Progress.PurpleBagVerified = true;
+        Console.WriteLine("Button clicked, PurpleBagVerified set to true");
+    }
+    void MarkGreenBagFinalized()
+    {
+        Progress.GreenBagFinalized = true;
+        Console.WriteLine("Button clicked, GreenBagFinalized set to true");
+    }
+}

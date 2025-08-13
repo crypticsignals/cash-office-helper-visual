@@ -1,0 +1,179 @@
+﻿@page "/"
+@inject ProgressTrackerService Progress
+@rendermode InteractiveServer
+
+<PageTitle>Home</PageTitle>
+
+@if (Progress.IsSaturday)
+{   
+    <h1>Saturday Night Cash Office Checklist</h1>
+}
+else
+{
+    <h1>Cash Office Checklist</h1>
+}
+<p>May your cash office always balance.</p>
+<p class="warn">⚠️ As of right now, reloading this page resets your progress. Until I find a fix for this, please avoid doing that. ⚠️</p>
+<p>Something that may help is going to your device's settings and turning off auto-lock so your screen doesn't power down and potentially close this site in the background.</p>
+<hr />
+
+@if (!Progress.SaturdayNightChecked)
+{
+    <p class="warn">Are you running this program on a saturday night?</p>
+    <p><button class="btn btn-accept" @onclick="ConfirmSaturday">Yes</button>
+    <button class="btn btn-deny" @onclick="DenySaturday">No</button></p>
+}
+
+@if (Progress.IsSaturday && !Progress.InitialChecklistDone)
+{
+    <p class="warn">You have not completed the initial checklist yet. <strong>Please get this done before anything else.</strong></p>
+    <p><NavLink href="/SaturdayNight/InitialChecklist" class="btn btn-primary">Initial Checklist</NavLink></p>
+    <hr />
+}
+else if (Progress.IsSaturday && Progress.InitialChecklistDone && !(Progress.RegistersCounted && Progress.Post9PMReportsDone && Progress.Post10PMReportsDone))
+{
+    <p>✅ Saturday Night Initial checklist is done.</p>
+    <p class="sidenote">You will need to do some closing tasks for saturday night as well, this will become available when all your reports are printed and your registers are counted.</p>
+    <hr />
+}
+
+@if (Progress.IsSaturday && Progress.RegistersCounted && Progress.Post9PMReportsDone && Progress.Post10PMReportsDone && !Progress.SaturdayNightDone && !Progress.SaturdayNightClosingTasksDone)
+{
+    <!--Button for saturday night closing tasks-->
+    <p><NavLink href="/SaturdayNight/ClosingTasks" class="btn btn-primary">Saturday Night Closing Tasks</NavLink></p>
+}
+else if (Progress.IsSaturday && Progress.InitialChecklistDone && Progress.SaturdayNightDone)
+{
+    <p>✅ Saturday Night Tasks have been completed.</p>
+}
+
+@if (!Progress.LoansDone)
+{
+    <p><button class="btn btn-primary" @onclick="MarkLoansDone">Mark Loans Done</button></p>
+}
+else
+{
+    <p>✅ Loans have been marked as done.</p>
+}
+
+@if (!Progress.BeginningSafeBalancingDone)
+{
+    <p><button class="btn btn-primary" @onclick="BeginningSafeBalancingDone">Mark Beginning Safe Balancing Done</button></p>
+}
+else
+{
+    <p>✅ Beginning Safe Balancing has been marked as done.</p>
+}
+
+@if (!Progress.RegistersCounted)
+{
+    <p><NavLink href="/registers" class="btn btn-primary">Registers</NavLink></p>
+}
+else
+{
+    <p>✅ Registers have been counted.</p>
+}
+
+@if (Progress.RegistersCounted && !Progress.InstacartPhonesGrabbed)
+{
+    <p><button class="btn btn-primary" @onclick="MarkInstacartPhonesGrabbed">Get and Charge Instacart Phones</button></p>
+}
+else if (Progress.InstacartPhonesGrabbed)
+{
+    <p>✅ Instacart Phones grabbed and charging.</p>
+}
+
+@if (!Progress.ReportsDone)
+{
+    <p><NavLink href="/Reports" class="btn btn-primary">Reports</NavLink></p>
+}
+else
+{
+    <p>✅ Reports have been marked as done.</p>
+}
+
+@if (!Progress.DepositsDone)
+{
+    <p><NavLink href="/deposits" class="btn btn-primary">Deposits</NavLink></p>
+}
+else
+{
+    <p>✅ Deposits have been marked as done.</p>
+}
+
+@if (!Progress.EndOfNightTasksDone && Progress.DepositsDone && Progress.Post9PMReportsDone && Progress.Post10PMReportsDone)
+{
+    <p><NavLink href="/EndOfNight" class="btn btn-primary">End of Night Tasks</NavLink></p>
+}
+else if (Progress.EndOfNightTasksDone)
+{
+    <p>✅ End of Night tasks have been finished.</p>
+}
+else if (!Progress.EndOfNightTasksDone)
+{
+    <p class="sidenote">End of night tasks will become available when you have made your deposit bags and have all your 9PM and 10PM reports printed.</p>
+}
+
+@if (Progress.IsSaturday && Progress.SaturdayNightDone && Progress.LoansDone && Progress.BeginningSafeBalancingDone && Progress.RegistersCounted && Progress.InstacartPhonesGrabbed && Progress.ReportsDone && Progress.DepositsDone && Progress.EndOfNightTasksDone)
+{
+    <hr />
+    <h2 class="rainbow">All cash office tasks completed!</h2>
+    <p>🎉🎉🎉</p>
+    <p>Good work! All your tasks for tonight are done.</p>
+    <p class="warn"><strong>Before you leave the cash office, make sure:</strong></p>
+    <ul>
+        <li>You have all of your stuff on you</li>
+        <li>You left the cash office keys in the drawer</li>
+        <li>You left your back office till in the safe</li>
+        <li>You have the reports ready to go on the store manager's desk</li>
+    </ul>
+    <p>You are now able to close this tab. Have a great night!</p>
+
+}
+
+@if (!Progress.IsSaturday && Progress.LoansDone && Progress.BeginningSafeBalancingDone && Progress.RegistersCounted && Progress.InstacartPhonesGrabbed && Progress.ReportsDone && Progress.DepositsDone && Progress.EndOfNightTasksDone)
+{
+    <hr />
+    <h2 class="rainbow">All cash office tasks completed!</h2>
+    <p>🎉🎉🎉</p>
+    <p>Good work! All your tasks for tonight are done.</p>
+    <p class="warn"><strong>Before you leave the cash office, make sure:</strong></p>
+    <ul>
+        <li>You have all of your stuff on you</li>
+        <li>You left the cash office keys in the drawer</li>
+        <li>You left your back office till in the safe</li>
+        <li>You have the reports ready to go on the store manager's desk</li>
+    </ul>
+    <p>You are now able to close this tab. Have a great night!</p>
+}
+
+@code {
+    void ConfirmSaturday()
+    {
+        Progress.SaturdayNightChecked = true;
+        Progress.IsSaturday = true;
+        Console.WriteLine("Button clicked, SaturdayNightChecked set to true");
+    }
+    void DenySaturday()
+    {
+        Progress.SaturdayNightChecked = true;
+        Progress.IsSaturday = false;
+        Console.WriteLine("Button clicked, SaturdayNightChecked set to true");
+    }
+    void MarkLoansDone()
+    {
+        Progress.LoansDone = true;
+        Console.WriteLine("Button clicked, LoansDone set to true");
+    }
+
+    void BeginningSafeBalancingDone()
+    {
+        Progress.BeginningSafeBalancingDone = true;
+        Console.WriteLine("Button clicked, BeginningSafeBalancingDone set to true");
+    }
+    void MarkInstacartPhonesGrabbed()
+    {
+        Progress.InstacartPhonesGrabbed = true;
+        Console.WriteLine("Button clicked, InstacartPhonesGrabbed set to true");
+    }
+}

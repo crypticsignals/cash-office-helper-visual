@@ -1,0 +1,23 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v9.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v9.0": {
+      "cash-office-helper-visual/1.0.0": {
+        "runtime": {
+          "cash-office-helper-visual.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "cash-office-helper-visual/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}
