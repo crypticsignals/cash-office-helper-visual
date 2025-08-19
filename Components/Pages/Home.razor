@@ -13,8 +13,15 @@ else
     <h1>Cash Office Checklist</h1>
 }
 <p>May your cash office always balance.</p>
-<p class="warn">⚠️ As of right now, reloading this page resets your progress. Until I find a fix for this, please avoid doing that. ⚠️</p>
-<p>Something that may help is going to your device's settings and turning off auto-lock so your screen doesn't power down and potentially close this site in the background.</p>
+
+@if (!Progress.WarningAcknowledged)
+{
+    <p class="warn">⚠️ As of right now, reloading this page resets your progress. Until I find a fix for this, please avoid doing that. ⚠️</p>
+    <p>Something that may help is going to your device's settings and turning off auto-lock so your screen doesn't power down and potentially close this site in the background.</p>
+    <p><button class="btn btn-primary" @onclick="ConfirmWarning">I understand, hide warning</button></p>
+}
+
+
 <hr />
 
 @if (!Progress.SaturdayNightChecked)
@@ -148,6 +155,11 @@ else if (!Progress.EndOfNightTasksDone)
 }
 
 @code {
+    void ConfirmWarning()
+    {
+        Progress.WarningAcknowledged = true;
+        Console.WriteLine("Button clicked, WarningAcknowledged set to true");
+    }
     void ConfirmSaturday()
     {
         Progress.SaturdayNightChecked = true;

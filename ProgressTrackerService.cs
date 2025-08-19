@@ -1,5 +1,6 @@
 public class ProgressTrackerService
 {
+    public bool WarningAcknowledged { get; set; } = false;
     // Beginning stuff
     public bool LoansDone { get; set; } = false;
     public bool BeginningSafeBalancingDone { get; set; } = false;
